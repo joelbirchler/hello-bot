@@ -16,6 +16,4 @@
 (set! *main-cli-fn* -main)
 
 
-; TODO: onoff doesn't work with the latest version of nodejs
 ; TODO: on sigint, gpio/close should (.unexport led)
-; TODO: (defn route) where response will (.send res _)

@@ -1,8 +1,14 @@
 (ns hello-bot.server
   (:require [cljs.nodejs :as node]))
 
-(def express (node/require "express"))
-(def app (express))
+(defonce express (node/require "express"))
+(defonce app (express))
+
+(defn GET [path action-fn]
+  (.get app path
+    (fn [req res]
+      (.send res (action-fn (.. req -params))))))
+
 
 ;(.get app "/gpio/:pin/set/:value"
 ;  (fn [req res]
@@ -11,9 +17,12 @@
 ;      (keyword (.. req -params -value)))
 ;    (.send res "ok")))
 
-(.get app "/"
-  (fn [req res]
-    (.send res "Howdy.")))
+
+(GET "/taco/:wat"
+  #(str "Taco " (.-wat %)))
+
+(GET "/"
+  #(str "Hello"))
 
 (defn init []
   (.listen app 3000

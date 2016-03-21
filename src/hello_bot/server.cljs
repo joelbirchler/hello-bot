@@ -22,7 +22,7 @@
   #(str "Taco " (.-wat %)))
 
 (GET "/"
-  #(str "Hello"))
+  #(str "Hello!"))
 
 (defn init []
   (.listen app 3000

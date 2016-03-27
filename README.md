@@ -1,5 +1,15 @@
 This is an experiment for driving a robot with an HTTP api and excuse to play with ClojureScript.
 
+# TODO
+
+- [x] Simple writing interface
+- [ ] Cleanup gpio on close
+- [ ] Motors
+- [ ] Bumper
+
+
+# Pins
+
 Note: Raspberry PI GPIO pins are confusingly numbered. It appears that the onoff library uses the internal BCM 
 GPIO number.
 

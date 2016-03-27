@@ -1,6 +1,8 @@
 (ns hello-bot.gpio
   (:require [cljs.nodejs :as node]))
 
+(enable-console-print!)
+
 (def onoff (.-Gpio (node/require "onoff")))
 
 (defn gpio [bcm-pin direction]

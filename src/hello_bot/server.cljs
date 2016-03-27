@@ -1,5 +1,6 @@
 (ns hello-bot.server
-  (:require [cljs.nodejs :as node]))
+  (:require [cljs.nodejs :as node]
+            [hello-bot.gpio :as gpio]))
 
 (defonce express (node/require "express"))
 (defonce app (express))
@@ -9,20 +10,27 @@
     (fn [req res]
       (.send res (action-fn (.. req -params))))))
 
+(defn a-tag [text url]
+  (str "<a href='" url "'>" text "</a>"))
 
-;(.get app "/gpio/:pin/set/:value"
-;  (fn [req res]
-;    (gpio/set-pin
-;      (int (.. req -params -pin))
-;      (keyword (.. req -params -value)))
-;    (.send res "ok")))
+(defn high-low-html [pin]
+  (str
+    pin ": "
+    (a-tag "high" (str "/gpio/" pin "/set/high"))
+    " / "
+    (a-tag "low" (str "/gpio/" pin "/set/low"))
+    "<br/>"))
 
-
-(GET "/taco/:wat"
-  #(str "Taco " (.-wat %)))
+(GET "/gpio/:pin/set/:value"
+  (fn [params]
+    (gpio/set-pin
+      (int (.-pin params))
+      (keyword (.-value params)))
+    (a-tag "ok" "/")))
 
 (GET "/"
-  #(str "Hello!"))
+  #(apply str 
+    (map high-low-html [4 22 23 24 25])))
 
 (defn init []
   (.listen app 3000

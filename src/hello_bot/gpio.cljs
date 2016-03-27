@@ -16,6 +16,10 @@
     bcm-pins
     (map #(gpio % :out) bcm-pins)))
 
+(defn close []
+  (doseq [[_ pin] pins]
+    (.unexport pin)))
+
 (defn set-pin [bcm-pin high-or-low]
   (let [pin (get pins bcm-pin)
         value (if (= :high high-or-low) 1 0)]

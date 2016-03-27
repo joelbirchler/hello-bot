@@ -3,7 +3,7 @@ This is an experiment for driving a robot with an HTTP api and excuse to play wi
 # TODO
 
 - [x] Simple writing interface
-- [ ] Cleanup gpio on close
+- [x] Cleanup gpio on close
 - [ ] Motors
 - [ ] Bumper
 

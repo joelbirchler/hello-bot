@@ -24,13 +24,13 @@
 (GET "/gpio/:pin/set/:value"
   (fn [params]
     (gpio/set-pin
-      (int (.-pin params))
+      (keyword (.-pin params))
       (keyword (.-value params)))
     (a-tag "ok" "/")))
 
 (GET "/"
   #(apply str 
-    (map high-low-html [4 22 23 24 25])))
+    (map high-low-html ["yellow-led" "green-led" "left-forward-motor" "left-reverse-motor"])))
 
 (defn init []
   (.listen app 3000

@@ -30,7 +30,7 @@
 
 (GET "/"
   #(apply str 
-    (map high-low-html ["yellow-led" "green-led" "left-forward-motor" "left-reverse-motor"])))
+    (map high-low-html ["yellow-led" "green-led" "left-forward-motor" "left-reverse-motor" "right-forward-motor" "right-reverse-motor"])))
 
 (defn init []
   (.listen app 3000

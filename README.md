@@ -4,7 +4,9 @@ This is an experiment for driving a robot with an HTTP api and excuse to play wi
 
 - [x] Simple writing interface
 - [x] Cleanup gpio on close
-- [ ] Motors
+- [x] Cycle leds on start up
+- [x] Motors
+- [ ] Higher-level motor api (eg. forward 200ms, left 20ms)
 - [ ] Bumper
 
 

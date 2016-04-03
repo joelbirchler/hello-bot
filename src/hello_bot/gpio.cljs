@@ -10,13 +10,16 @@
   (onoff. bcm-pin (name direction)))
 
 (def pins
-  {:yellow-led         (gpio 22 :out)
-   :green-led          (gpio 23 :out)
-   :left-forward-motor (gpio 4  :out)
-   :left-reverse-motor (gpio 25 :out)})
+  {:yellow-led          (gpio 22 :out)
+   :green-led           (gpio 23 :out)
+   :left-forward-motor  (gpio 25 :out)
+   :left-reverse-motor  (gpio 4  :out)
+   :right-forward-motor (gpio 17 :out)
+   :right-reverse-motor (gpio 18 :out)})
 
 (defn close []
   (doseq [[_ pin] pins]
+    (.writeSync pin 0)
     (.unexport pin)))
 
 (defn set-pin [pin-name high-or-low]

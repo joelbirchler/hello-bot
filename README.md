@@ -6,6 +6,7 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [ ] Revive the project in Clojure proper, without the http api
 - [ ] Mocked GPIO interact with leds and motor pins
 - [ ] PI Docker
+- [ ] https://github.com/peterschwarz/clj-gpio
 
 
 # Pins

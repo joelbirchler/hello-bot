@@ -1,4 +1,11 @@
-main.js
-out/
-node_modules/
-cljs.jar
+/target
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+.hgignore
+.hg/

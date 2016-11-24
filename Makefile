@@ -1,10 +1,13 @@
-all: build run
+all: build verify run
 
 build:
-	java -cp cljs.jar:src clojure.main node_build.clj
+	docker build -t hello-bot .
 
 run:
-	node main.js
+	docker run --rm hello-bot
 
 repl:
-	rlwrap java -cp cljs.jar:src clojure.main node_repl.clj
+	docker run --rm -it hello-bot lein repl
+
+verify:
+	docker run --rm hello-bot lein test

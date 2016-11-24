@@ -1,18 +1,16 @@
-This is an experiment for driving a robot with an HTTP api and excuse to play with ClojureScript.
+This is an experiment for driving a robot and an excuse to play with Clojure.
+
 
 # TODO
 
-- [x] Simple writing interface
-- [x] Cleanup gpio on close
-- [x] Cycle leds on start up
-- [x] Motors
-- [ ] Higher-level motor api (eg. forward 200ms, left 20ms)
-- [ ] Bumper
+- [ ] Revive the project in Clojure proper, without the http api
+- [ ] Mocked GPIO interact with leds and motor pins
+- [ ] PI Docker
 
 
 # Pins
 
-Note: Raspberry PI GPIO pins are confusingly numbered. It appears that the onoff library uses the internal BCM 
+Note: Raspberry PI GPIO pins are confusingly numbered. It appears that the onoff library uses the internal BCM
 GPIO number.
 
 PIN | GPIO | BCM GPIO
@@ -31,5 +29,3 @@ PIN | GPIO | BCM GPIO
 22  |  6   |   25
 23  |  14  |   11
 26  |  11  |   7
-
-

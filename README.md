@@ -3,10 +3,13 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 
 # TODO
 
-- [ ] Revive the project in Clojure proper, without the http api
-- [ ] Mocked GPIO interact with leds and motor pins
+- [ ] Mock GPIO interface prints
+- [ ] LEDs cycle
+- [ ] Trap exit and close GPIO
+- [ ] Go forward, turn right, go forward, turn right...
 - [ ] PI Docker
 - [ ] https://github.com/peterschwarz/clj-gpio
+- [ ] Go forward, bump, back up a bit, turn right, go forward...
 
 
 # Pins

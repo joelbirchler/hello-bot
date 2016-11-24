@@ -1,7 +1,12 @@
 (ns hello-bot.core
+  (:require [hello-bot.led :as led]
+            [environ.core :refer [env]])
   (:gen-class))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(.addShutdownHook (Runtime/getRuntime)
+  (Thread. #(println "shutdown")))
+
+(defn -main [& args]
+  (println "Hello!")
+  (let [green-led (led/init (env :green-led))]
+    (led/turn-on! green-led)))

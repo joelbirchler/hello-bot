@@ -5,7 +5,7 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 
 - [x] Mock GPIO interface prints
 - [x] LEDs cycle
-- [ ] Trap exit and close GPIO
+- [x] Trap exit and close GPIO
 - [ ] PI Docker
 - [ ] Go forward, turn right, go forward, turn right...
 - [ ] https://github.com/peterschwarz/clj-gpio

@@ -28,7 +28,6 @@
   ([port pattern]
     (each-delayed #(gpio/write-value! port %) 800 pattern)))
 
-(defn close [port]
-  (-> port
-    (turn-off!)
-    (gpio/close!)))
+(defn close! [port]
+  (turn-off! port)
+  (gpio/close! port))

@@ -3,13 +3,24 @@
             [environ.core :refer [env]])
   (:gen-class))
 
-(.addShutdownHook (Runtime/getRuntime)
-  (Thread. #(println "shutdown")))
+(def leds
+  {:green  (env :green-led)
+   :yellow (env :yellow-led)})
+
+(defn init-leds []
+  (doseq [[_ port] leds] (led/init port)))
+
+(defn cycle-leds []
+  (led/blink! (:green leds))
+  (led/blink! (:yellow leds) (take 7 (cycle [:off :on]))))
+
+(defn shutdown []
+  (println "Goodbye!")
+  (doseq [[_ port] leds] (led/close! port)))
 
 (defn -main [& args]
   (println "Hello!")
-  (let [green-led (led/init (env :green-led))
-        yellow-led (led/init (env :yellow-led))]
-    (led/blink! green-led  (take 6 (cycle [:on :off])))
-    (led/blink! yellow-led (take 7 (cycle [:off :on])))
-    (loop [] (recur))))
+  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
+  (init-leds)
+  (cycle-leds)
+  (loop [] (recur)))

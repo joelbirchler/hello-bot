@@ -8,5 +8,8 @@
 
 (defn -main [& args]
   (println "Hello!")
-  (let [green-led (led/init (env :green-led))]
-    (led/turn-on! green-led)))
+  (let [green-led (led/init (env :green-led))
+        yellow-led (led/init (env :yellow-led))]
+    (led/blink! green-led  (take 6 (cycle [:on :off])))
+    (led/blink! yellow-led (take 7 (cycle [:off :on])))
+    (loop [] (recur))))

@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [
     [org.clojure/clojure "1.8.0"]
+    [org.clojure/core.async "0.2.395"]
     [environ "1.1.0"]]
   :main ^:skip-aot hello-bot.core
   :target-path "target/%s"

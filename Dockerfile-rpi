@@ -1,0 +1,12 @@
+FROM hypriot/rpi-java:1.8.0
+
+RUN sudo apt-get update && sudo apt-get install ca-certificates
+
+RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein -O /usr/local/bin/lein \
+  && chmod 775 /usr/local/bin/lein \
+  && /usr/local/bin/lein
+
+ENV LEIN_ROOT=1
+
+CMD ["lein", "repl"]
+

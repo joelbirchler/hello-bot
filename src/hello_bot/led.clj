@@ -16,7 +16,7 @@
 
 (defn- each-delayed [fun delay pattern]
   (go-loop [pattern pattern]
-    (if (empty? pattern) nil
+    (when (seq pattern)
       (recur (do
         (fun (first pattern))
         (<! (timeout delay))

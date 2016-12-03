@@ -1,0 +1,9 @@
+(ns hello-bot.programs.cycle-leds)
+
+;; strategy: pass channels, use helper functions
+;; We may want to use core.match to make a simple actorish motor
+;; TODO: practice on something first... the motor??
+
+(defn play [{:keys [green-led yellow-led]} _motor _bumper]
+  (blink! green-led)
+  (blink! yellow-led (take 7 (cycle [:off :on]))))

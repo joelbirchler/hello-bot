@@ -1,26 +1,34 @@
 (ns hello-bot.core
   (:require [hello-bot.led :as led]
+            [hello-bot.motor :as motor]
             [environ.core :refer [env]])
   (:gen-class))
 
-(def leds
-  {:green  (env :green-led)
-   :yellow (env :yellow-led)})
+(defn keys->ports [keys]
+  (zipmap keys (map env keys)))
 
-(defn init-leds []
-  (doseq [[_ port] leds] (led/init port)))
+;; FIXME: Blergh... some polymorphism would make this less messy. Not sure the best
+;; clojure way to handle it though. Don't want to accidentally fall into OO.
 
-(defn cycle-leds []
-  (led/blink! (:green leds))
-  (led/blink! (:yellow leds) (take 7 (cycle [:off :on]))))
+(def led-keys    [:green-led :yellow-led])
+(def motor-keys  [:left-forward-motor :left-reverse-motor :right-forward-motor :right-reverse-motor])
+(def led-ports   (keys->ports led-keys))
+(def motor-ports (keys->ports motor-keys))
+
+(defn call-with-ports [fun ports]
+  (doseq [[_ port] ports] (fun port)))
+
+(defn init []
+  (println "Hello!")
+  (call-with-ports led/init led-ports)
+  (call-with-ports motor/init motor-ports))
 
 (defn shutdown []
   (println "Goodbye!")
-  (doseq [[_ port] leds] (led/close! port)))
+  (call-with-ports led/close! led-ports)
+  (call-with-ports motor/close! motor-ports))
 
 (defn -main [& args]
-  (println "Hello!")
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
-  (init-leds)
-  (cycle-leds)
+  (init)
   (loop [] (recur)))

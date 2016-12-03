@@ -5,8 +5,7 @@
 (defn init [port]
   (-> port
     (gpio/open-port)
-    (gpio/set-direction! :out))
-  port)
+    (gpio/set-direction! :out)))
 
 (defn turn-on! [port]
   (gpio/write-value! port :high))

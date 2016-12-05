@@ -58,6 +58,9 @@ psk="[YOUR PASSWORD HERE]"
 }
 ```
 
+FIXME: This configuration isn't letting me egress via wifi.
+
+3. Install make: `sudo apt-get update && sudo apt-get install make`
 
 # Pins
 

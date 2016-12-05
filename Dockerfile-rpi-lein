@@ -9,4 +9,3 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 ENV LEIN_ROOT=1
 
 CMD ["lein", "repl"]
-

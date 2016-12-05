@@ -1,4 +1,13 @@
-FROM clojure:lein-2.7.1-alpine
+#!/usr/bin/env bash
+
+if [[ $(uname -m) == arm* ]]; then
+  BASE_IMAGE=rpi-lein:latest
+else
+  BASE_IMAGE=clojure:lein-2.7.1-alpine
+fi
+
+cat  << EOF
+FROM $BASE_IMAGE
 MAINTAINER Joel Birchler <joel@joelbirchler.com>
 
 RUN mkdir /app
@@ -20,3 +29,4 @@ ENV YELLOW_LED=22 \
     RIGHT_REVERSE_MOTOR=18
 
 CMD ["java", "-jar", "/app/target/uberjar/hello-bot-0.2.0-SNAPSHOT-standalone.jar"]
+EOF

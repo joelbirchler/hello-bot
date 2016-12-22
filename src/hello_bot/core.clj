@@ -4,16 +4,17 @@
             [environ.core :refer [env]])
   (:gen-class))
 
-(defn keys->ports [keys]
-  (zipmap keys (map env keys)))
+
+(defn key->portmap [key]
+  [key (key env)])
 
 ;; FIXME: Blergh... some polymorphism would make this less messy. Not sure the best
 ;; clojure way to handle it though. Don't want to accidentally fall into OO.
 
 (def led-keys    [:green-led :yellow-led])
 (def motor-keys  [:left-forward-motor :left-reverse-motor :right-forward-motor :right-reverse-motor])
-(def led-ports   (keys->ports led-keys))
-(def motor-ports (keys->ports motor-keys))
+(def led-ports   (map key->portmap led-keys))
+(def motor-ports (map key->portmap motor-keys))
 
 (defn call-with-ports [fun ports]
   (doseq [[_ port] ports] (fun port)))

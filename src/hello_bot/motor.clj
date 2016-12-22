@@ -8,11 +8,6 @@
 ;; NOTE: This is going to be different than the LED... we want to return channels
 ;;       really... so yeah...
 
-(defn init [& ports]
-  (doseq [port ports]
-    (gpio/open-port port)
-    (gpio/set-direction! port :out)))
-
 (defn forward! [forward-port reverse-port]
   (gpio/write-value! forward-port :high)
   (gpio/write-value! reverse-port :low))
@@ -24,8 +19,3 @@
 (defn stop! [& ports]
   (doseq [port ports]
     (gpio/write-value! port :low)))
-
-(defn close! [& ports]
-  (doseq [port ports]
-    (stop! port)
-    (gpio/close! port)))

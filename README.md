@@ -7,12 +7,14 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] LEDs cycle
 - [x] Trap exit and close GPIO
 - [x] Sketch out programs
-- [ ] Motors
-- [ ] PI 3: Wifi, Docker, GPIO wiring
-- [ ] https://github.com/peterschwarz/clj-gpio
+- [ ] Motors/car
 - [ ] LED cycle sketch works
 - [ ] Square sketch works
 - [ ] Bumpy sketch works
+- [ ] PI 3: Wifi, GPIO wiring
+- [ ] https://github.com/peterschwarz/clj-gpio
+- [ ] Instead of always using state-mutating commands, can we make functions that
+      take the current state, params, and return a new desired state?
 - [ ] Break into client/server, where server handles the queueing and robot
       commands and the client sends the program
 

@@ -3,13 +3,13 @@
 (defrecord Motor [forward-key reverse-key])
 
 (defn forward [{:keys [forward-key reverse-key]}]
-  {forward-key :on
-   reverse-key :off})
+  {forward-key :high
+   reverse-key :low})
 
 (defn reverse [{:keys [forward-key reverse-key]}]
-  {forward-key :off
-   reverse-key :on})
+  {forward-key :low
+   reverse-key :high})
 
 (defn stop [{:keys [forward-key reverse-key]}]
-  {forward-key :off
-   reverse-key :off})
+  {forward-key :low
+   reverse-key :low})

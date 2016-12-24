@@ -11,21 +11,24 @@
     (motor/->Motor :left-forward-motor :left-reverse-motor)
     (motor/->Motor :right-forward-motor :right-reverse-motor)))
 
-(def leds         [:green-led :yellow-led])
-(def devices      (concat leds (car/keys bot-car)))
-(def device-ports (map env devices))
+(def leds [:green-led :yellow-led])
+
+(def devices (concat leds (car/keys bot-car)))
+(def portmap (select-keys env devices))
+(def ports   (vals portmap))
 
 (defn init []
   (println "Hello!")
-  (doseq [port device-ports]
+  (doseq [port ports]
     (device/open! port)))
 
 (defn shutdown []
   (println "Goodbye!")
-  (doseq [port device-ports]
+  (doseq [port ports]
     (device/close! port)))
 
 (defn -main [& args]
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
   (init)
+  (device/set-state! portmap (car/turn-right bot-car))
   (loop [] (recur)))

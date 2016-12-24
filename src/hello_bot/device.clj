@@ -12,6 +12,10 @@
 (defn turn-off! [port]
   (gpio/write-value! port :low))
 
+(defn set-state! [portmap statemap]
+  (doseq [[key value] statemap]
+    (gpio/write-value! (key portmap) value)))
+
 (defn close! [port]
   (turn-off! port)
   (gpio/close! port))

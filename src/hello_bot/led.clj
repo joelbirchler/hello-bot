@@ -10,6 +10,7 @@
         (<! (timeout delay))
         (rest pattern))))))
 
+;; TODO: consider moving to hello-bot.device
 (defn blink!
   ([port]
     (blink! port (take 6 (cycle [:on :off]))))

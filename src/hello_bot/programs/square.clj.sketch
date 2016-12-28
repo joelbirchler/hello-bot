@@ -1,8 +1,0 @@
-;; These are sketches of what a square running program might look like
-
-(defn play [_leds car _bumper]
-  (go-loop []
-    (forward! car)
-    (<! (timeout 1000))
-    (turn-right! car)
-    (recur)))

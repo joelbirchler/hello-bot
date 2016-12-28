@@ -8,18 +8,19 @@
     (vals left-motor)
     (vals right-motor)))
 
-(defn -merge-with [fun left right]
+(defn with-both-motors [fun {:keys [left-motor right-motor]}]
   (merge
-    (fun left) (fun right)))
+    (fun left-motor)
+    (fun right-motor)))
 
-(defn forward [{:keys [left-motor right-motor]}]
-  (merge-with motor/forward left-motor right-motor))
+(defn forward [my-car]
+  (with-both-motors motor/forward my-car))
 
-(defn reverse [{:keys [left-motor right-motor]}]
-  (merge-with motor/reverse left-motor right-motor))
+(defn reverse [my-car]
+  (with-both-motors motor/reverse my-car))
 
-(defn stop [{:keys [left-motor right-motor]}]
-  (merge-with motor/stop left-motor right-motor))
+(defn stop [my-car]
+  (with-both-motors motor/stop my-car))
 
 (defn turn-right [{:keys [left-motor right-motor]}]
   (merge

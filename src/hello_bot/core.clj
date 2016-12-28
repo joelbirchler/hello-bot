@@ -3,6 +3,7 @@
             [hello-bot.car :as car]
             [hello-bot.motor :as motor]
             [hello-bot.device :as device]
+            [hello-bot.programs.square :as program]
             [environ.core :refer [env]])
   (:gen-class))
 
@@ -30,5 +31,7 @@
 (defn -main [& args]
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
   (init)
-  (device/set-state! portmap (car/turn-right bot-car))
+  (program/test
+    (partial device/>> portmap)
+    {:car bot-car :leds leds})
   (loop [] (recur)))

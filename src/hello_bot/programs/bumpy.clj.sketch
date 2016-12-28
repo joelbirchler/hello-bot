@@ -1,10 +1,13 @@
 ;; This is a sketch of what a turn-right-on-bump program might look like
 
+(defn on-bump [leds car]
+  (blink! (:yellow-led leds))
+  (>> (reverse car) 500)
+  (>> (turn-right car) 20))
+
 (defn play [leds car bumper]
   (go-loop []
-    (forward! car)
+    (>> (forward! car))
     (when (= :bumped (<! bumper))
-      (blink! (:yellow-led leds))
-      (backward! car)
-      (turn-right! car))
+      (on-bump leds car))
     (recur)))

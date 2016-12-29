@@ -22,12 +22,17 @@
   (doseq [[key value] statemap]
     (gpio/write-value! (key portmap) value)))
 
+(defn- player-sender [ch]
+  (fn [& messages]
+    (doseq [message messages]
+      (>!! ch message))))
+
 (defn player [portmap]
   (let [ch (chan)]
     (go-loop [message (<! ch)]
       (println "message:" message)
       (match message
-        [:sleep ms] (<! (timeout ms))
+        [:sleep seconds] (<! (timeout (* 1000 seconds)))
         :else (set-state! portmap message))
     (recur (<! ch)))
-    (partial >!! ch)))
+    (player-sender ch)))

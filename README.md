@@ -8,13 +8,12 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] Trap exit and close GPIO
 - [x] Sketch out programs
 - [x] Refactor to functions that return desired state, and state change handler
-- [ ] Square sketch works
+- [x] Square sketch works
 - [ ] LED cycle sketch works (probably want to refactor led to match declarative style of car)
 - [ ] Bumpy sketch works
 - [ ] PI 3: Wifi, GPIO wiring
 - [ ] https://github.com/peterschwarz/clj-gpio
-- [ ] Break into client/server, where server handles the queueing and robot
-      commands and the client sends the program
+
 
 # Raspberry PI Setup
 

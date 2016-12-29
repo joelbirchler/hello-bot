@@ -1,9 +1,10 @@
 (ns hello-bot.car
+  (:refer-clojure :exclude [reverse])
   (:require [hello-bot.motor :as motor]))
 
 (defrecord Car [left-motor right-motor])
 
-(defn keys [{:keys [left-motor right-motor]}]
+(defn all-keys [{:keys [left-motor right-motor]}]
   (concat
     (vals left-motor)
     (vals right-motor)))

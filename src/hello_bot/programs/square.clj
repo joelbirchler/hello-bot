@@ -1,6 +1,6 @@
 (ns hello-bot.programs.square
-  (:require [hello-bot.car :refer [forward reverse turn-right turn-left]]
-            [clojure.core.async :as async :refer [go-loop]]))
+  (:refer-clojure :exclude [reverse])
+  (:require [hello-bot.car :refer [forward reverse turn-right turn-left]]))
 
 (defn play [>> {car :car}]
   (>>

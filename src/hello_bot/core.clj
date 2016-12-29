@@ -14,7 +14,7 @@
 
 (def leds [:green-led :yellow-led])
 
-(def devices (concat leds (car/keys bot-car)))
+(def devices (concat leds (car/all-keys bot-car)))
 (def portmap (select-keys env devices))
 (def ports   (vals portmap))
 

@@ -1,4 +1,5 @@
-(ns hello-bot.motor)
+(ns hello-bot.motor
+  (:refer-clojure :exclude [reverse]))
 
 (defrecord Motor [forward-key reverse-key])
 

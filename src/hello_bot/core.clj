@@ -31,7 +31,7 @@
 (defn -main [& args]
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
   (init)
-  (program/test
-    (partial device/>> portmap)
+  (program/play
+    (device/player portmap)
     {:car bot-car :leds leds})
   (loop [] (recur)))

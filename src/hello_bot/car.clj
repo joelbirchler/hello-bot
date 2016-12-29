@@ -8,7 +8,7 @@
     (vals left-motor)
     (vals right-motor)))
 
-(defn with-both-motors [fun {:keys [left-motor right-motor]}]
+(defn- with-both-motors [fun {:keys [left-motor right-motor]}]
   (merge
     (fun left-motor)
     (fun right-motor)))

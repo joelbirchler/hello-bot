@@ -1,6 +1,7 @@
 (ns hello-bot.device
   (:require [hello-bot.gpio-mock :as gpio]
-            [clojure.core.async :as async :refer [<! go go-loop timeout]]))
+            [clojure.core.match :refer [match]]
+            [clojure.core.async :as async :refer [<! >!! go go-loop timeout chan]]))
 
 (defn open! [port]
   (-> port
@@ -21,7 +22,12 @@
   (doseq [[key value] statemap]
     (gpio/write-value! (key portmap) value)))
 
-(defn >> [portmap gpio-plan wait-milliseconds]
-  (set-state! portmap gpio-plan)
-  (println portmap)
-  (println "playa gonna play play play")) ; TODO: add pause
+(defn player [portmap]
+  (let [ch (chan)]
+    (go-loop [message (<! ch)]
+      (println "message:" message)
+      (match message
+        [:sleep ms] (<! (timeout ms))
+        :else (set-state! portmap message))
+    (recur (<! ch)))
+    (partial >!! ch)))

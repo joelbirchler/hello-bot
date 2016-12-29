@@ -28,10 +28,18 @@
   (doseq [port ports]
     (device/close! port)))
 
+(defn play-program [program-name]
+  (let [ns-name (str "hello-bot.programs." program-name)
+        ns-symbol (symbol ns-name)]
+    (require ns-symbol)
+    (let [play-fn (ns-resolve (find-ns ns-symbol) 'play)]
+      (play-fn
+        (device/player portmap)
+        {:car bot-car :leds leds}))))
+
 (defn -main [& args]
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
   (init)
-  (program/play
-    (device/player portmap)
-    {:car bot-car :leds leds})
+  (play-program "cycle-leds")
+  (play-program "square")
   (loop [] (recur)))

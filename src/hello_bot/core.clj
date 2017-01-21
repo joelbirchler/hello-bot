@@ -12,9 +12,9 @@
     (motor/->Motor :left-forward-motor :left-reverse-motor)
     (motor/->Motor :right-forward-motor :right-reverse-motor)))
 
-(def leds [:green-led :yellow-led])
+(def leds (led/->Leds :green-led :yellow-led))
 
-(def devices (concat leds (car/all-keys bot-car)))
+(def devices (concat (led/all-keys leds) (car/all-keys bot-car)))
 (def portmap (select-keys env devices))
 (def ports   (vals portmap))
 
@@ -34,12 +34,12 @@
     (require ns-symbol)
     (let [play-fn (ns-resolve (find-ns ns-symbol) 'play)]
       (play-fn
-        (device/player portmap)
-        {:car bot-car :leds leds}))))
+         (device/player portmap)
+         {:car bot-car :leds leds}))))
 
 (defn -main [& args]
   (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
   (init)
   (play-program "cycle-leds")
-  (play-program "square")
+  ;(play-program "square")
   (loop [] (recur)))

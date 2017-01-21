@@ -15,6 +15,15 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [ ] https://github.com/peterschwarz/clj-gpio
 
 
+# Development
+
+Everything is setup to run using Docker and make. You can also run everything using the excellent cider mode
+for emacs (tutorial here: http://www.braveclojure.com/basic-emacs/).
+
+The gpio pins are read from ENVs. These will be set in the Dockerfile or when you start the container. You 
+can also choose to use the `envs` file by running `eval $(cat envs)`.
+
+
 # Raspberry PI Setup
 
 I'm using a Raspberry PI 3 with the [Hypriot](http://blog.hypriot.com/) image. Hypriot

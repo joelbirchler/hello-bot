@@ -1,22 +1,23 @@
 (ns hello-bot.programs.cycle-leds)
 
 (defn blink
-  ([count]
-   (blink count [:high :low]))
-  ([count pattern]
-   (take count (cycle pattern))))
+  ([key count]
+   (blink key count [:high :low]))
+  ([key count pattern]
+   (map 
+     #(hash-map key %) 
+     (take count (cycle pattern)))))
 
-(defn sequence->device-play [sequence delay led-key]
-  (->> sequence
-    (map #(hash-map led-key %))
-    (interpose [:sleep delay])))
+(defn plan [yellow-led green-led]
+  (concat
+    (mapcat vector 
+      (blink yellow-led 6)
+      (blink green-led  6 [:low :high])
+      (repeat [:sleep 0.5]))
+    [{yellow-led :low}
+     {green-led  :low}]))
 
 (defn play [>> {{yellow-led :yellow green-led :green} :leds}]
-  (apply >> (sequence->device-play (blink 6) 0.5 yellow-led)))
+  (apply >> (plan yellow-led green-led)))
+  
 
-
-;; TODO: green and led blinking
-;;
-;(defn play [{:keys [green-led yellow-led]} _motor _bumper]
-;  (blink! green-led)
-;  (blink! yellow-led (take 7 (cycle [:off :on]))))

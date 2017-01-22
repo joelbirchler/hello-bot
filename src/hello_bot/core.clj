@@ -1,5 +1,5 @@
 (ns hello-bot.core
-  (:require [hello-bot.led :as led]
+  (:require [hello-bot.display :as display]
             [hello-bot.car :as car]
             [hello-bot.motor :as motor]
             [hello-bot.device :as device]
@@ -12,7 +12,8 @@
     (motor/->Motor :left-forward-motor :left-reverse-motor)
     (motor/->Motor :right-forward-motor :right-reverse-motor)))
 
-(def leds (led/->Leds :green-led :yellow-led))
+(def leds 
+  (display/->Leds :green-led :yellow-led))
 
 (defn all-vals [m]
   (mapcat

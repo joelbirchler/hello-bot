@@ -1,12 +1,7 @@
 (ns hello-bot.led)
-;; TODO: consider renaming this module
+;; TODO: consider renaming this module "lights?" "display?"
 
 (defrecord Leds [green yellow])
-
-;; TODO: refactor car/all-keys and led/all-keys into single function
-(defn all-keys [leds]
-  (vals leds))
-
 
 
 

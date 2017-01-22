@@ -14,7 +14,12 @@
 
 (def leds (led/->Leds :green-led :yellow-led))
 
-(def devices (concat (led/all-keys leds) (car/all-keys bot-car)))
+(defn all-vals [m]
+  (mapcat
+    #(if (map? %) (all-vals %) [%])
+    (vals m)))
+
+(def devices (concat (all-vals leds) (all-vals bot-car)))
 (def portmap (select-keys env devices))
 (def ports   (vals portmap))
 

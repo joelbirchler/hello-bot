@@ -9,7 +9,8 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] Sketch out programs
 - [x] Refactor to functions that return desired state, and state change handler
 - [x] Square sketch works
-- [ ] LED cycle sketch works (probably want to refactor led to match declarative style of car)
+- [x] LED cycle sketch works
+- [ ] Tests
 - [ ] Bumpy sketch works
 - [ ] PI 3: Wifi, GPIO wiring
 - [ ] https://github.com/peterschwarz/clj-gpio

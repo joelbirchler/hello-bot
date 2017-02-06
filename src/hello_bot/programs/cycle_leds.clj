@@ -11,9 +11,9 @@
 (defn plan [yellow-led green-led]
   (concat
     (mapcat vector 
-      (blink yellow-led 6)
-      (blink green-led  6 [:low :high])
-      (repeat [:sleep 0.5]))
+      (blink yellow-led 8)
+      (blink green-led  8 [:low :high])
+      (repeat [:sleep 0.3]))
     [{yellow-led :low}
      {green-led  :low}]))
 

@@ -1,10 +1,11 @@
 (ns hello-bot.device
-  (:require [hello-bot.gpio-mock :as gpio]
+  (:require [gpio.core :as gpio]
             [clojure.core.match :refer [match]]
             [clojure.core.async :as async :refer [<! >!! go go-loop timeout chan]]))
 
-(defn open! [port]
-  (-> port
+(defn open! [gpio-pin]
+  "Opens (and returns) a port for a given gpio pin number"
+  (-> gpio-pin
     (gpio/open-port)
     (gpio/set-direction! :out)))
 

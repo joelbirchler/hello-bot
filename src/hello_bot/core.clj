@@ -15,37 +15,36 @@
 (def leds 
   (display/->Leds :green-led :yellow-led))
 
-(defn all-vals [m]
+(defn deep-vals [m]
   (mapcat
-    #(if (map? %) (all-vals %) [%])
+    #(if (map? %) (deep-vals %) [%])
     (vals m)))
 
-(def devices (concat (all-vals leds) (all-vals bot-car)))
-(def portmap (select-keys env devices))
-(def ports   (vals portmap))
+(defn map-kv [func some-hash-map]
+  "Maps over values in a hash-map"
+  (reduce-kv (fn [m k v] (assoc m k (func v))) {} some-hash-map))
 
-(defn init []
+(defn init [pin-map]
   (println "Hello!")
-  (doseq [port ports]
-    (device/open! port)))
+  (map-kv #(device/open! %) pin-map))
 
-(defn shutdown []
+(defn shutdown [pin-map]
   (println "Goodbye!")
-  (doseq [port ports]
-    (device/close! port)))
+  (map-kv #(device/close! %) pin-map))
 
-(defn play-program [program-name]
+(defn play-program [port-map program-name]
   (let [ns-name (str "hello-bot.programs." program-name)
         ns-symbol (symbol ns-name)]
     (require ns-symbol)
     (let [play-fn (ns-resolve (find-ns ns-symbol) 'play)]
       (play-fn
-         (device/player portmap)
+         (device/player port-map)
          {:car bot-car :leds leds}))))
 
 (defn -main [& args]
-  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
-  (init)
-  (play-program "cycle-leds")
-  ;(play-program "square")
-  (loop [] (recur)))
+  (let [device-keys (concat (deep-vals leds) (deep-vals bot-car))
+        pin-map     (select-keys env device-keys)
+        port-map    (init pin-map)]
+    (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown pin-map)))
+    (play-program port-map "cycle-leds")
+    (loop [] (recur))))

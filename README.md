@@ -10,19 +10,11 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] Refactor to functions that return desired state, and state change handler
 - [x] Square sketch works
 - [x] LED cycle sketch works
-- [ ] Refactor
--- [ ] Remove dynamicness of program loading (revisit abstraction levels a bit)
--- [ ] Remove docker stuff... we're running everything from cider for this anyway
+- [ ] Remove dynamic program loading and revisit abstraction levels a bit
 - [ ] Tests
 - [ ] Bumpy sketch works
 - [x] PI 3: Wifi, GPIO wiring
 - [x] https://github.com/peterschwarz/clj-gpio
-
-
-# Development
-
-Everything is setup to run using Docker and make. You can also run everything using the excellent cider mode
-for emacs (tutorial here: http://www.braveclojure.com/basic-emacs/).
 
 
 # ENV and Pins for Raspberry PI 3

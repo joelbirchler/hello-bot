@@ -1,4 +1,4 @@
-(ns hello-bot.programs.cycle-leds)
+(ns hello-bot.program.cycle-leds)
 
 (defn blink
   ([key count]

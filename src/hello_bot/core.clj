@@ -3,6 +3,7 @@
             [hello-bot.device.car :as car]
             [hello-bot.device.motor :as motor]
             [hello-bot.driver :as driver]
+            [hello-bot.program.cycle-leds :as cycle-leds]
             [environ.core :refer [env]])
   (:gen-class))
 
@@ -23,27 +24,24 @@
   "Maps over values in a hash-map"
   (reduce-kv (fn [m k v] (assoc m k (func v))) {} some-hash-map))
 
-(defn init [pin-map]
-  (println "Hello!")
+(defn open-ports [pin-map]
   (map-kv #(driver/open! %) pin-map))
 
 (defn shutdown [pin-map]
   (println "Goodbye!")
   (map-kv #(driver/close! %) pin-map))
 
-(defn play-program [port-map program-name]
-  (let [ns-name (str "hello-bot.programs." program-name)
-        ns-symbol (symbol ns-name)]
-    (require ns-symbol)
-    (let [play-fn (ns-resolve (find-ns ns-symbol) 'play)]
-      (play-fn
-         (driver/player port-map)
-         {:car bot-car :leds leds}))))
-
-(defn -main [& args]
+(defn init! []
+  (println "Hello!")
   (let [device-keys (concat (deep-vals leds) (deep-vals bot-car))
         pin-map     (select-keys env device-keys)
-        port-map    (init pin-map)]
-    (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown pin-map)))
-    (play-program port-map "cycle-leds")
-    (loop [] (recur))))
+        port-map    (open-ports pin-map)]
+      (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown pin-map)))
+      port-map))
+
+(defn -main [& args]
+  (let [port-map (init!)]  
+    (cycle-leds/play
+      (driver/player port-map)
+      {:car bot-car :leds leds}))
+  (loop [] (recur)))

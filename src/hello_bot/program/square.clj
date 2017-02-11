@@ -1,4 +1,4 @@
-(ns hello-bot.programs.square
+(ns hello-bot.program.square
   (:refer-clojure :exclude [reverse])
   (:require [hello-bot.car :refer [forward reverse turn-right turn-left]]))
 

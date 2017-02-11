@@ -15,6 +15,8 @@
 (def leds 
   (display/->Leds :green-led :yellow-led))
 
+(def bot {:car bot-car :leds leds})
+
 (defn deep-vals [m]
   (mapcat
     #(if (map? %) (deep-vals %) [%])
@@ -41,7 +43,5 @@
 
 (defn -main [& args]
   (let [port-map (init!)]  
-    (cycle-leds/play
-      (driver/player port-map)
-      {:car bot-car :leds leds}))
+    (cycle-leds/play (driver/player port-map) bot))
   (loop [] (recur)))

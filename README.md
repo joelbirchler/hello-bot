@@ -10,7 +10,7 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] Refactor to functions that return desired state, and state change handler
 - [x] Square sketch works
 - [x] LED cycle sketch works
-- [ ] Remove dynamic program loading and revisit abstraction levels a bit
+- [ ] Square sketch recur creates a pile up of messages
 - [ ] Tests
 - [ ] Bumpy sketch works
 - [x] PI 3: Wifi, GPIO wiring

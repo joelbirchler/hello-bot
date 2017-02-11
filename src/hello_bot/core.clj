@@ -1,9 +1,8 @@
 (ns hello-bot.core
-  (:require [hello-bot.display :as display]
-            [hello-bot.car :as car]
-            [hello-bot.motor :as motor]
-            [hello-bot.device :as device]
-            [hello-bot.programs.square :as program]
+  (:require [hello-bot.device.display :as display]
+            [hello-bot.device.car :as car]
+            [hello-bot.device.motor :as motor]
+            [hello-bot.driver :as driver]
             [environ.core :refer [env]])
   (:gen-class))
 
@@ -26,11 +25,11 @@
 
 (defn init [pin-map]
   (println "Hello!")
-  (map-kv #(device/open! %) pin-map))
+  (map-kv #(driver/open! %) pin-map))
 
 (defn shutdown [pin-map]
   (println "Goodbye!")
-  (map-kv #(device/close! %) pin-map))
+  (map-kv #(driver/close! %) pin-map))
 
 (defn play-program [port-map program-name]
   (let [ns-name (str "hello-bot.programs." program-name)
@@ -38,7 +37,7 @@
     (require ns-symbol)
     (let [play-fn (ns-resolve (find-ns ns-symbol) 'play)]
       (play-fn
-         (device/player port-map)
+         (driver/player port-map)
          {:car bot-car :leds leds}))))
 
 (defn -main [& args]

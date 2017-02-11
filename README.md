@@ -11,8 +11,6 @@ This is an experiment for driving a robot and an excuse to play with Clojure.
 - [x] Square sketch works
 - [x] LED cycle sketch works
 - [ ] Refactor
--- [ ] Rename ns device to driver?
--- [ ] Move various devices into devices package: "hello-bot.device.motor"
 -- [ ] Remove dynamicness of program loading (revisit abstraction levels a bit)
 -- [ ] Remove docker stuff... we're running everything from cider for this anyway
 - [ ] Tests

@@ -1,6 +1,6 @@
-(ns hello-bot.car
+(ns hello-bot.device.car
   (:refer-clojure :exclude [reverse])
-  (:require [hello-bot.motor :as motor]))
+  (:require [hello-bot.device.motor :as motor]))
 
 (defrecord Car [left-motor right-motor])
 

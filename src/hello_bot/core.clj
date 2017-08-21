@@ -1,47 +1,40 @@
 (ns hello-bot.core
-  (:require [hello-bot.device.display :as display]
-            [hello-bot.device.car :as car]
-            [hello-bot.device.motor :as motor]
-            [hello-bot.driver :as driver]
-            [hello-bot.program.cycle-leds :as cycle-leds]
-            [environ.core :refer [env]])
+  (:require [hello-bot.driver :as driver])
   (:gen-class))
 
-(def bot-car
-  (car/->Car
-    (motor/->Motor :left-forward-motor :left-reverse-motor)
-    (motor/->Motor :right-forward-motor :right-reverse-motor)))
+(def state
+  (atom {
+    :yellow-led :low
+    :green-led :low
+    :left-forward-motor :low
+    :left-reverse-motor :low
+    :right-forward-motor :low
+    :right-reverse-motor :low
+  }))
 
-(def leds 
-  (display/->Leds :green-led :yellow-led))
+(def left-motor {
+  :forward :left-forward-motor
+  :reverse :left-reverse-motor
+  })
 
-(def bot {:car bot-car :leds leds})
+(def right-motor {
+  :forward :right-forward-motor
+  :reverse :right-reverse-motor
+  })
 
-(defn deep-vals [m]
-  (mapcat
-    #(if (map? %) (deep-vals %) [%])
-    (vals m)))
+(defn on-state-change [_watch-key _ref _old-state new-state]
+  (println "Updated to:" new-state))
 
-(defn map-kv [func some-hash-map]
-  "Maps over values in a hash-map"
-  (reduce-kv (fn [m k v] (assoc m k (func v))) {} some-hash-map))
-
-(defn open-ports [pin-map]
-  (map-kv #(driver/open! %) pin-map))
-
-(defn shutdown [pin-map]
+(defn shutdown! []
   (println "Goodbye!")
-  (map-kv #(driver/close! %) pin-map))
+  (driver/close-all! @state))
 
 (defn init! []
   (println "Hello!")
-  (let [device-keys (concat (deep-vals leds) (deep-vals bot-car))
-        pin-map     (select-keys env device-keys)
-        port-map    (open-ports pin-map)]
-      (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown pin-map)))
-      port-map))
+  (driver/open-all! @state)
+  (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown!)))
+  (add-watch state :state-watch on-state-change))
 
 (defn -main [& args]
-  (let [port-map (init!)]  
-    (cycle-leds/play (driver/player port-map) bot))
-  (loop [] (recur)))
+  (init!)
+  :wat)

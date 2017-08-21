@@ -1,39 +1,42 @@
 (ns hello-bot.driver
   (:require [gpio.core :as gpio]
-            [clojure.core.match :refer [match]]
-            [clojure.core.async :as async :refer [<! >!! go go-loop timeout chan]]))
+            [environ.core :refer [env]]))
 
-(defn open! [gpio-pin]
-  "Opens (and returns) a port for a given gpio pin number"
-  (-> gpio-pin
-    (gpio/open-port)
-    (gpio/set-direction! :out)))
+(defn- pin [device-key]
+  "Returns the env defined pin value for a given device key (eg. :yellow-led)"
+  (env device-key))
 
-(defn turn-on! [port]
-  (gpio/write-value! port :high))
+(defn open! [device-key]
+  "Opens (and returns) a port for a given device key"
+  (gpio/open-port 
+    (pin device-key)
+    :direction :out 
+    :digital-result-format :keyword))
 
-(defn turn-off! [port]
-  (gpio/write-value! port :low))
+(defn turn-on! [device-key]
+  (gpio/write-value! (pin device-key) :high))
 
-(defn close! [port]
-  (turn-off! port)
-  (gpio/close! port))
+(defn turn-off! [device-key]
+  (gpio/write-value! (pin device-key) :low))
 
-(defn set-state! [portmap statemap]
-  (doseq [[key value] statemap]
-    (gpio/write-value! (key portmap) value)))
+(defn close! [device-key]
+  (turn-off! device-key)
+  (gpio/close! (pin device-key)))
 
-(defn- player-sender [ch]
-  (fn [& messages]
-    (doseq [message messages]
-      (>!! ch message))))
+(defn- do-kv [func statemap]
+  (doseq [[k v] statemap] (func k v)))
 
-(defn player [portmap]
-  (let [ch (chan)]
-    (go-loop [message (<! ch)]
-      (println "message:" message)
-      (match message
-        [:sleep seconds] (<! (timeout (* 1000 seconds)))
-        :else (set-state! portmap message))
-    (recur (<! ch)))
-    (player-sender ch)))
+(defn- do-keys [func statemap]
+  (doseq [[k _v] statemap] (func k)))
+
+(defn set-state! [statemap]
+  (do-kv
+    (fn [k v] 
+      gpio/write-value! (pin k) v) 
+    statemap))
+
+(defn open-all! [statemap]
+  (do-keys #(open! %) statemap))
+
+(defn close-all! [statemap]
+  (do-keys #(close! %) statemap))

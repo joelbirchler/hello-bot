@@ -1,4 +1,4 @@
-(defproject hello-bot "0.2.0-SNAPSHOT"
+(defproject hello-bot "0.3.0-SNAPSHOT"
   :description "A small robot experiment"
   :url "http://www.joelbirchler.com"
   :license {:name "MIT License"

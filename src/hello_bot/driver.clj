@@ -8,9 +8,9 @@
 
 (defn open! [device-key]
   "Opens (and returns) a port for a given device key"
-  (gpio/open-port 
+  (gpio/open-port
     (pin device-key)
-    :direction :out 
+    :direction :out
     :digital-result-format :keyword))
 
 (defn turn-on! [device-key]
@@ -29,11 +29,17 @@
 (defn- do-keys [func statemap]
   (doseq [[k _v] statemap] (func k)))
 
+(defn- statemap->pin-states [statemap]
+  (map (fn [[k v]] [(pin k) v]) statemap))
+
+(defn- statemap->pinmap [statemap]
+  (into {} (statemap->pin-states statemap)))
+
+(defn watwat [pin val]
+  (println pin "-" val)) ; gpio/write-value!
+
 (defn set-state! [statemap]
-  (do-kv
-    (fn [k v] 
-      gpio/write-value! (pin k) v) 
-    statemap))
+  (do-kv watwat (statemap->pinmap statemap) ))
 
 (defn open-all! [statemap]
   (do-keys #(open! %) statemap))

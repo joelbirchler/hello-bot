@@ -32,7 +32,7 @@
 (defn init! []
   (println "Hello!")
   (driver/open-all! @state)
-  (.addShutdownHook (Runtime/getRuntime) (Thread. #(shutdown!)))
+  
   (add-watch state :state-watch on-state-change))
 
 (defn -main [& args]

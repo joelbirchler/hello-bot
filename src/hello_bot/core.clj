@@ -23,16 +23,11 @@
   })
 
 (defn on-state-change [_watch-key _ref _old-state new-state]
-  (println "Updated to:" new-state))
-
-(defn shutdown! []
-  (println "Goodbye!")
-  (driver/close-all! @state))
+  (driver/write! @new-state))
 
 (defn init! []
   (println "Hello!")
-  (driver/open-all! @state)
-  
+  (driver/write! @state)
   (add-watch state :state-watch on-state-change))
 
 (defn -main [& args]

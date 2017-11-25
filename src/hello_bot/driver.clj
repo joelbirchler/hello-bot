@@ -1,39 +1,42 @@
 (ns hello-bot.driver
   (:require [gpio.core :as gpio]
-            [clojure.core.match :refer [match]]
-            [clojure.core.async :as async :refer [<! >!! go go-loop timeout chan]]))
+            [environ.core :refer [env]]))
 
-(defn open! [gpio-pin]
-  "Opens (and returns) a port for a given gpio pin number"
-  (-> gpio-pin
-    (gpio/open-port)
-    (gpio/set-direction! :out)))
+;; We don't want to expose the internals of gpio to the rest of the app, so 
+;; we use a portmap here (:device-key gpioport) to track all of the gpio port
+;; objects. The driver abstraction allows for interactions using the device
+;; key (eg. :yellow-led) and blissful ignorance of the backing gpio library.
+(def open-devices (atom #{}))
 
-(defn turn-on! [port]
-  (gpio/write-value! port :high))
+(defn- pin [device-key]
+  "Returns the pin (number) for a given device-key (eg. :yellow-led)"
+  (Integer/parseInt (env device-key)))
 
-(defn turn-off! [port]
-  (gpio/write-value! port :low))
+(defn- open-output-port! [device-key]
+  "Opens a gpio pin for output"
+  (-> (pin device-key)
+    (gpio/open-pin)
+    (gpio/set-direction :out)))
 
-(defn close! [port]
-  (turn-off! port)
-  (gpio/close! port))
+(defn- init-device! [device-key]
+  "Opens the gpio pin and sets a hook for closing it on shutdown"
+  (open-output-port! device-key)
+  (swap! open-devices conj device-key)
+  (.addShutdownHook (Runtime/getRuntime) (Thread. 
+                                          #(gpio/close-pin (pin device-key)))))
 
-(defn set-state! [portmap statemap]
-  (doseq [[key value] statemap]
-    (gpio/write-value! (key portmap) value)))
+(defn- gpio-value [state]
+  "Translates :high/:low states to the internal gpio value"
+  (= state :high))
 
-(defn- player-sender [ch]
-  (fn [& messages]
-    (doseq [message messages]
-      (>!! ch message))))
+(defn- write-to-device-key! [device-key state]
+  "Writes :high/:low to a single device-key (eg. :yellow-led)"
+  (println device-key "->" state)
+  (when-not (contains? @open-devices device-key)
+    (init-device! device-key))
+  (gpio/write-value (pin device-key) (gpio-value state)))
 
-(defn player [portmap]
-  (let [ch (chan)]
-    (go-loop [message (<! ch)]
-      (println "message:" message)
-      (match message
-        [:sleep seconds] (<! (timeout (* 1000 seconds)))
-        :else (set-state! portmap message))
-    (recur (<! ch)))
-    (player-sender ch)))
+(defn write! [statemap]
+  "Write to gpio a map of device-keys (eg. :yellow-led) and states (eg. :high, :low)"
+  (doseq [[device-key state] statemap]
+    (write-to-device-key! device-key state)))

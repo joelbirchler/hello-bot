@@ -1,9 +1,11 @@
 (ns hello-bot.core
   (:require [hello-bot.driver :as driver]
-            [hello-bot.car :as car])
+            [hello-bot.car :as car]
+            [clojure.core.async :as async :refer [>! <! >!! <!! go go-loop chan]])
   (:gen-class))
 
 (def state (atom car/stop))
+(def bumper-chan (chan))
 
 (defn on-state-change [_watch-key _ref _old-state new-state]
   (driver/write! new-state))
@@ -13,29 +15,29 @@
   (driver/write! @state)
   (add-watch state :state-watch on-state-change))
 
-(defn go! [new-state]
-  (swap! state merge new-state))
+(defn mut! 
+  ([new-state] 
+    (swap! state merge new-state))
+  ([new-state seconds] 
+    (mut! new-state)
+    (Thread/sleep (* seconds 1000))))
 
-;; This won't work for multi-tasking/event receiving
-(defn go-sleep! [new-state s]
-  (go! new-state)
-  (Thread/sleep (* s 1000)))
+(defn bump! []
+  (>!! bumper-chan :bump))
 
-(defn drive-in-a-square! []
-  (go-sleep! car/stop 1)
-  (go-sleep! car/forward 2)
-  (go-sleep! car/right 0.3)
-  (go-sleep! car/forward 2)
-  (go-sleep! car/right 0.3)
-  (go-sleep! car/forward 2)
-  (go-sleep! car/right 0.3)
-  (go-sleep! car/forward 2)
-  (go-sleep! car/right 0.3)
-  (go-sleep! car/forward 2)
-  (go-sleep! car/right 5)
-  (go! car/stop))
+(defn bumped! []
+  (mut! car/backward 0.1)
+  (mut! car/right 0.3)
+  (mut! car/forward))
+
+(defn drive! []
+  (mut! car/forward)
+  (go-loop []
+    (<! bumper-chan)
+    (bumped!)
+    (recur)))
 
 (defn -main [& args]
   (init!)
-  (drive-in-a-square!)
-  :wat)
+  (drive!)
+  :ok)

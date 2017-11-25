@@ -9,9 +9,18 @@
     :right-reverse-motor :low
   })
 
-(def stop {
+(def backward {
     :yellow-led          :high
-    :green-led           :high
+    :green-led           :low
+    :left-forward-motor  :low
+    :left-reverse-motor  :high
+    :right-forward-motor :low
+    :right-reverse-motor :high
+  })
+
+(def stop {
+    :yellow-led          :low
+    :green-led           :low
     :left-forward-motor  :low
     :left-reverse-motor  :low
     :right-forward-motor :low
@@ -19,8 +28,8 @@
   })
 
 (def left {
-    :yellow-led          :high
-    :green-led           :low
+    :yellow-led          :low
+    :green-led           :high
     :left-forward-motor  :low
     :left-reverse-motor  :high
     :right-forward-motor :high

@@ -9,23 +9,28 @@
 (def open-devices (atom #{}))
 
 (defn- pin [device-key]
+  "Returns the pin (number) for a given device-key (eg. :yellow-led)"
   (Integer/parseInt (env device-key)))
 
 (defn- open-output-port! [device-key]
+  "Opens a gpio pin for output"
   (-> (pin device-key)
     (gpio/open-pin)
     (gpio/set-direction :out)))
 
 (defn- init-device! [device-key]
+  "Opens the gpio pin and sets a hook for closing it on shutdown"
   (open-output-port! device-key)
   (swap! open-devices conj device-key)
   (.addShutdownHook (Runtime/getRuntime) (Thread. 
-    #(gpio/close-pin (pin device-key)))))
+                                          #(gpio/close-pin (pin device-key)))))
 
 (defn- gpio-value [state]
+  "Translates :high/:low states to the internal gpio value"
   (= state :high))
 
 (defn- write-to-device-key! [device-key state]
+  "Writes :high/:low to a single device-key (eg. :yellow-led)"
   (println device-key "->" state)
   (when-not (contains? @open-devices device-key)
     (init-device! device-key))

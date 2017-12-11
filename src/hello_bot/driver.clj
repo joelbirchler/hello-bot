@@ -53,10 +53,10 @@
 
 (defn read-channel [device-key]
   "Returns a channel receives messages from an input port"
-  (when-not (contains? @open-devices device-key) ;; FIXME: I don't like this as a side-effect. Seems unexpected.
-    (init-device! device-key :input))
-  (let [input-chan (chan)]
-    (go-loop []
-      (>! input-chan (gpio/read-value (gpio/wait-for-input (pin device-key))))
-      (recur))
-    input-chan))
+  (when-not (contains? @open-devices device-key)
+    (init-device! device-key :input) ;; FIXME: This function does to much
+    (let [input-chan (chan)]
+      (go-loop []
+        (>! input-chan (gpio/read-value (gpio/wait-for-input (pin device-key))))
+        (recur))
+      input-chan)))

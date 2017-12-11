@@ -24,8 +24,8 @@
 
 (defn bumped! []
   (println "Bump!")
-  (mut! car/backward 0.2)
-  (mut! car/right 0.2)
+  (mut! car/backward 0.3)
+  (mut! car/left 0.2)
   (mut! car/forward))
 
 (defn drive! []

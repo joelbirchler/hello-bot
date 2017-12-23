@@ -1,18 +1,19 @@
 (ns hello-bot.core
-  (:require [hello-bot.driver :as driver]
+  (:require [hello-bot.input-device :as input]
+            [hello-bot.output-device :as output]
             [hello-bot.car :as car]
             [clojure.core.async :as async :refer [>! <! >!! <!! go go-loop chan]])
   (:gen-class))
 
 (def state (atom car/stop))
-(def bumper-chan (driver/read-channel :bumper))
+(def bumper-chan (input/read-channel :bumper))
 
 (defn on-state-change [_watch-key _ref _old-state new-state]
-  (driver/write! new-state))
+  (output/write! new-state))
 
 (defn init! []
   (println "Hello!")
-  (driver/write! @state)
+  (output/write! @state)
   (add-watch state :state-watch on-state-change))
 
 (defn mut! 

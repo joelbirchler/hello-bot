@@ -1,7 +1,6 @@
 (ns hello-bot.driver
   (:require [gpio.core :as gpio]
-            [environ.core :refer [env]]
-            [clojure.core.async :as async :refer [>! <! >!! <!! go go-loop chan]]))
+            [environ.core :refer [env]]))
 
 ;; We don't want to expose the internals of gpio to the rest of the app, so 
 ;; we use a portmap here (:device-key gpioport) to track all of the gpio port
@@ -13,50 +12,32 @@
   "Returns the pin (number) for a given device-key (eg. :yellow-led)"
   (Integer/parseInt (env device-key)))
 
-(defn open-output-port! [device-key]
-  "Opens a gpio pin for output"
-  (-> (pin device-key)
-    (gpio/open-pin)
-    (gpio/set-direction :out)))
+(defn registered? [device-key]
+  (contains? @open-devices device-key))
 
-(defn open-input-port! [device-key]
-  "Opens a gpio pin for input"
-  (-> (pin device-key)
-    (gpio/open-pin)
-    (gpio/set-direction :in)
-    (gpio/active-low true)))
-
-(defn- init-device! [device-key input-or-output]
-  "Opens the gpio pin and sets a hook for closing it on shutdown"
-  (if (= :input input-or-output)
-    (open-input-port! device-key) 
-    (open-output-port! device-key))
+(defn register! [device-key]
+  "Opens device and sets a hook for closing it on shutdown"
+  (gpio/open-pin (pin device-key))
   (swap! open-devices conj device-key)
   (.addShutdownHook 
-    (Runtime/getRuntime) (Thread. #(gpio/close-pin (pin device-key)))))
+   (Runtime/getRuntime) (Thread. #(gpio/close-pin (pin device-key)))))
 
-(defn- gpio-value [state]
+(defn set-direction [device-key direction]
+  "Sets direction as :in or :out"
+  (gpio/set-direction (pin device-key) direction)
+  (when (= :in direction)
+    (gpio/active-low (pin device-key) true)))
+
+(defn gpio-value [state]
   "Translates :high/:low states to the internal gpio value"
   (= state :high))
 
-(defn- write-to-device-key! [device-key state]
-  "Writes :high/:low to a single device-key (eg. :yellow-led)"
-  (println device-key "->" state)
-  (when-not (contains? @open-devices device-key)
-    (init-device! device-key :output))
+(defn write-value [device-key state]
+  "Writes :high/:low to a device key"
   (gpio/write-value (pin device-key) (gpio-value state)))
 
-(defn write! [statemap]
-  "Write to gpio a map of device-keys (eg. :yellow-led) and states (eg. :high, :low)"
-  (doseq [[device-key state] statemap]
-    (write-to-device-key! device-key state)))
-
-(defn read-channel [device-key]
-  "Returns a channel receives messages from an input port"
-  (when-not (contains? @open-devices device-key)
-    (init-device! device-key :input) ;; FIXME: This function does to much
-    (let [input-chan (chan)]
-      (go-loop []
-        (>! input-chan (gpio/read-value (gpio/wait-for-input (pin device-key))))
-        (recur))
-      input-chan)))
+(defn wait-read-value [device-key]
+  "Waits for input and then returns the value"
+  (-> (pin device-key)
+    (gpio/wait-for-input)
+    (gpio/read-value)))

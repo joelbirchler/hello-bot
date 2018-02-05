@@ -38,4 +38,6 @@
 (defn -main [& args]
   (init!)
   (drive!)
-  :ok)
+  (loop [] 
+    (Thread/sleep 1000) 
+    (recur)))
